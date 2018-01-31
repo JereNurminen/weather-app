@@ -13,7 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(pw)s@%(host)s:%(port
 # Same as db_config, the secret key is stored in config.py
 app.secret_key = secret_key
 db = SQLAlchemy(app)
-# We define a Post class to be used by SQLAlchemy when accessing the database
+# We define a Observation class to be used by SQLAlchemy when accessing the database
 class Observation(db.Model):
 	# As per usual, the primary key is an auto incrementing integer called 'id'
 	# The other attributes should be pretty self explanatory as well
@@ -38,59 +38,57 @@ class Location(db.Model):
 	latitude = db.Column(db.Float, unique=False, nullable=False)
 	longitude = db.Column(db.Float, unique=False, nullable=False)
 	timezone = db.Column(db.Integer, unique=False, nullable= False)
+	observations = []
 	@property
 	def serialize(self):
 		return {
 			'id': self.id,
 			'name': self.name,
 			'latitude': self.latitude,
-			'longitude': self.longitude
-		}
+			'longitude': self.longitude,
+			'observations': self.observations
+		}	
+	def load_observations(self):
+		observations_from_db = Observation.query.filter_by(location_id = self.id).all()
+		self.observations = list(map(lambda x: x.serialize, observations_from_db))
+	
 
 #####################
 ### API ENDPOINTS ###
 #####################
-'''
+
 @app.route('/api/observations/', methods = ['POST'])
-def save_post():
-	observation_json = request.json
-	observation = Observation(temperature = observation_json['temperature'], location_id = observation_json['location_id'], last_updated = datetime.datetime.now())
+def save_observation():
+	observation_data = request.json
+	observation = Observation(temperature = observation_data['temperature'], creation_time = datetime.datetime.now(), location_id = observation_data['location_id'])
+	if 150 > observation.temperature > 450:
+		return 'Too hot/cold'
 	db.session.add(observation)
 	db.session.commit()
 	return jsonify(observation.serialize)
 
-'''
-@app.route('/api/observations/', methods = ['POST'])
-def save_observation():
-	observation_data = request.data
-	observation = Observation(temperature = observation_data.temperature, creation_time = observation_data.creation_time, location_id = observation_data.location_id)
-	if 150 > observation.temperature > 450:
-		
 
 @app.route('/api/observations/', methods = ['GET'])
-def load_posts():
+def get_observations():
 	group_by = request.args.get('group_by', default = 'location', type = str)
 	if group_by not in ['location', 'observation']:
 		return 'Invalid \'group_by\' -value', 402
 	observations = []
 	if group_by == 'observation':
 		observations_from_db = Observation.query.all()
+		for observation in observations_from_db:
+			observations.append(observation)
 	elif group_by == 'location':
-		observations_from_db = Observation.query.group_by(Observation.location_id).all()
-	for post in observations_from_db:
-		observations.append(post.serialize)
+		locations_from_db = Location.query.all()
+		for location in locations_from_db:
+			location.load_observations()
+			observations.append(location.serialize)
 	return jsonify(observations)
 
 @app.route('/', methods = ['GET'])
 def index():
 	return 'Hello world!'
-'''
-@app.route('/api/observations/<int:post_id>', methods = ['DELETE'])
-def delete_post(post_id):
-	Post.query.filter_by(id = post_id).delete()
-	db.session.commit()
-	return str(post_id)
-'''
+
 # Only used when using the dev server.
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000)
