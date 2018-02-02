@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, jsonify, session
+from flask import Flask, request, render_template, redirect, jsonify, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from config import db_config, secret_key
@@ -87,7 +87,7 @@ def get_observations():
 
 @app.route('/', methods = ['GET'])
 def index():
-	return 'Hello world!'
+	return send_from_directory('static/dist/', 'index.html')
 
 # Only used when using the dev server.
 # if __name__ == '__main__':

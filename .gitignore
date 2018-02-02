@@ -105,3 +105,9 @@ weather-app/
 
 # Config file
 config.py
+
+# Frontend (Yarn, NPM et cetera)
+front/node_modules/
+front/yarn-error.log
+static/dist/
+
