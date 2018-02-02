@@ -18,7 +18,8 @@ module.exports = {
   entry: './index.js',
   output: {
     path: path.resolve('../static/dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/static/dist/'
   },
   module: {
     loaders: [
