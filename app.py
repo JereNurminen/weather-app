@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(pw)s@%(host)s:%(port
 # Same as db_config, the secret key is stored in config.py
 app.secret_key = secret_key
 db = SQLAlchemy(app)
+
 # We define a Observation class to be used by SQLAlchemy when accessing the database
 class Observation(db.Model):
 	# As per usual, the primary key is an auto incrementing integer called 'id'
@@ -49,7 +50,10 @@ class Location(db.Model):
 			'observations': self.observations
 		}	
 	def load_observations(self):
-		observations_from_db = Observation.query.filter_by(location_id = self.id).filter(Observation.creation_time > (datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0))).all()
+		observations_from_db = Observation.query \
+			.filter_by(location_id = self.id) \
+			.filter(Observation.creation_time > (datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0))) \
+			.all()
 		self.observations = list(map(lambda x: x.serialize, observations_from_db))
 	
 
