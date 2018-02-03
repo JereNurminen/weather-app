@@ -49,7 +49,7 @@ class Location(db.Model):
 			'observations': self.observations
 		}	
 	def load_observations(self):
-		observations_from_db = Observation.query.filter_by(location_id = self.id).all()
+		observations_from_db = Observation.query.filter_by(location_id = self.id).filter(Observation.creation_time > (datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0))).all()
 		self.observations = list(map(lambda x: x.serialize, observations_from_db))
 	
 
