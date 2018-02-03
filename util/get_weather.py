@@ -1,9 +1,16 @@
-import requests, json, sys
+import requests, json, sys, schedule, time
 from weather_api import api_key
 
 API_URL = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
 
 def main():
+	schedule.every(30).minutes.do(job)
+
+	while True:
+		schedule.run_pending()
+		time.sleep(1000)
+
+def job():
 	get_temperature(city = 'helsinki')
 	get_temperature(city = 'tokyo')
 	get_temperature(city = 'dubai')
