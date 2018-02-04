@@ -1,0 +1,23 @@
+:global {
+	@import url(https://fonts.googleapis.com/css?family=Fira+Sans);
+	$primary-color: #C3002F;
+
+	.location {
+		font-family: Fira Sans,sans-serif;
+		display: inline-block;
+		border: #000000 solid 2px;
+		border-radius: 5px;
+		margin: 15px;
+		padding: 5px 20px;
+	}
+
+	.location .currentTemperature {
+		font-size: 45px;
+	}
+
+	.location td,
+	.location th {
+		padding: 5px;
+	}
+
+}

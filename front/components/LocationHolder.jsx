@@ -25,11 +25,11 @@ export default class CountryHolder extends React.Component {
 
     render() {
       return (
-        <ul>
+        <div>
           {this.state.locations.map(location =>
             <LocationInfo location={location}/>
           )}
-        </ul>
+        </div>
       )
     }
 }

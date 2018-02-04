@@ -6,25 +6,25 @@ function convertTemperature(from, to, temperature) {
 	switch (from) {
 		case 'c':
 			if (to === 'f') {
-				return toFahrenheit(fromCelsius(temperature));
+				return Math.round(toFahrenheit(fromCelsius(temperature)));
 			} else if (to === 'k') {
-				return fromCelsius(temperature);
+				return Math.round(fromCelsius(temperature));
 			} else {
 				throw errormsg;
 			}
 		case 'f':
 			if (to === 'c') {
-				return toCelsius(fromFahrenheit(temperature));
+				return Math.round(toCelsius(fromFahrenheit(temperature)));
 			} else if (to === 'k') {
-				return fromFahrenheit(temperature);
+				return Math.round(fromFahrenheit(temperature));
 			} else {
 				throw errormsg;
 			}
 		case 'k':
 			if (to === 'c') {
-				return fromCelsius(temperature);
+				return Math.round(fromCelsius(temperature));
 			} else if (to === 'f') {
-				return fromFahrenheit(temperature);
+				return Math.round(fromFahrenheit(temperature));
 			} else {
 				throw errormsg;
 			}
