@@ -61,12 +61,15 @@ class Location(db.Model):
 ### API ENDPOINTS ###
 #####################
 
+# TODO Error handling
 @app.route('/api/observations/', methods = ['POST'])
 def save_observation():
 	observation_data = request.json
 	observation = Observation(temperature = observation_data['temperature'], creation_time = datetime.datetime.now(), location_id = observation_data['location_id'])
-	if 150 > observation.temperature > 450:
-		return 'Too hot/cold'
+	try:
+		observation.temperature = int(observation.temperature)
+	except ValueError:
+		return 'The temperature must be an integer!', 400
 	db.session.add(observation)
 	db.session.commit()
 	return jsonify(observation.serialize)
