@@ -14,6 +14,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(pw)s@%(host)s:%(port
 app.secret_key = secret_key
 db = SQLAlchemy(app)
 
+##############
+### MODELS ###
+##############
+
 # We define a Observation class to be used by SQLAlchemy when accessing the database
 class Observation(db.Model):
 	# As per usual, the primary key is an auto incrementing integer called 'id'
@@ -92,6 +96,14 @@ def get_observations():
 			observations.append(location.serialize)
 	return jsonify(observations)
 
+@app.route('/api/locations/<int:location_id>', methods = ['GET'])
+def get_location(location_id):
+	location_from_db = Location.query.filter_by(id = location_id).first()
+	if not location_from_db:
+		return 'Location not found!', 404
+	location_from_db.load_observations()
+	return jsonify(location_from_db.serialize)
+
 @app.route('/', methods = ['GET'])
 def index():
 	return send_from_directory('static/dist/', 'index.html')
@@ -99,4 +111,3 @@ def index():
 # Only used when using the dev server.
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000)
-

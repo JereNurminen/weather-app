@@ -8,7 +8,12 @@
 		border: #000000 solid 2px;
 		border-radius: 5px;
 		margin: 15px;
-		padding: 5px 20px;
+		padding: 10px 20px;
+		width: 25%;
+	}
+
+	.location h2 {
+		margin: 0 auto;
 	}
 
 	.location .currentTemperature {
@@ -18,6 +23,28 @@
 	.location td,
 	.location th {
 		padding: 5px;
+	}
+
+	.location table {
+		margin: 0 auto;
+	}
+
+	.openEditor.button {
+		cursor: pointer;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	@media (max-width: 1200px) {
+		.location {
+			width: 40%;
+		}
+	}
+
+	@media (max-width: 750px) {
+		.location {
+			width: 80%;
+		}
 	}
 
 }

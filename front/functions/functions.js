@@ -2,7 +2,11 @@
 //Temperature conversions:
 function convertTemperature(from, to, temperature) {
 	const errormsg = 'First and second arguments must be either \'c\', \'f\' or \'k\' (only one of each)';
-	if (isNaN(temperature)) throw 'Temperature has to be a number!';
+	temperature = parseInt(temperature);
+	if (isNaN(temperature)) {
+		alert('Temperature has to be a whole number!');
+		throw 'Temperature has to be a whole number!';
+	}
 	switch (from) {
 		case 'c':
 			if (to === 'f') {
@@ -22,9 +26,9 @@ function convertTemperature(from, to, temperature) {
 			}
 		case 'k':
 			if (to === 'c') {
-				return Math.round(fromCelsius(temperature));
+				return Math.round(toCelsius(temperature));
 			} else if (to === 'f') {
-				return Math.round(fromFahrenheit(temperature));
+				return Math.round(toFahrenheit(temperature));
 			} else {
 				throw errormsg;
 			}
@@ -35,7 +39,7 @@ function convertTemperature(from, to, temperature) {
 }
 
 function fromCelsius(temperature) {
-	return temperature - 273.15;
+	return temperature + 273.15;
 }
 
 function fromFahrenheit(temperature) {
@@ -43,7 +47,7 @@ function fromFahrenheit(temperature) {
 }
 
 function toCelsius(temperature) {
-	return temperature + 273.15;
+	return temperature - 273.15;
 }
 
 function toFahrenheit(temperature) {

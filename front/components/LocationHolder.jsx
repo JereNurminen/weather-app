@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import LocationInfo from './LocationInfo.jsx';
+import '../styles/LocationHolder.scss'
 
 export default class CountryHolder extends React.Component {
 
@@ -17,8 +18,7 @@ export default class CountryHolder extends React.Component {
         .then(responseData => {
             console.log(this);
             this.setState({
-                locations: responseData,
-                loadComplete: true
+                locations: responseData
             });
         });
     }

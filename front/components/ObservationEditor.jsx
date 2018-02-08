@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { convertTemperature } from '../functions/functions.js';
-//import '../styles/ObservationEditor.scss'
+import '../styles/ObservationEditor.scss'
 
 export default class ObservationEditor extends React.Component {
 
@@ -29,7 +29,6 @@ export default class ObservationEditor extends React.Component {
             'location_id': this.state.locationId,
             'temperature': convertTemperature('c', 'k', this.state.temperature)
         }
-
         fetch('http://weather.jerenurminen.me/api/observations/', { 
             method: 'POST',
             body: JSON.stringify(data),
@@ -40,15 +39,17 @@ export default class ObservationEditor extends React.Component {
         .then(response => response.json())
         .then(responseData => {
             console.log(responseData);
+            this.props.update();
         });
     }
 
     render() {
         return (
             <div className='observationEditor'>
-                <input type='number' value={this.state.temperature} onChange={this.handleChange}/>
-                <span>°C</span>
-                <button onClick={this.saveObservation}>Save</button>
+                <input className='numberInput' type='number' value={this.state.temperature} onChange={this.handleChange}/>
+                <span className='degrees'>°C</span>
+                <button className='save button' onClick={this.saveObservation}>Save</button>
+                <button className='cancel button' onClick={() => this.props.toggleEditor(false)}>Cancel</button>
             </div>
         )
     }
