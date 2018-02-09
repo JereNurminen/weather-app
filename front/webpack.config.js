@@ -25,6 +25,15 @@ module.exports = {
     loaders: [
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
       { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.(eot|woff|woff2|ttf|svg)(\?\S*)?$/, use: [{
+           loader: 'file-loader',
+           options: {
+             name: '[name].[ext]',
+             outputPath: 'fonts/',
+             publicPath: '/static/dist/'
+           }
+         }]
+       },
       { test: /\.css$/, exclude: /node_modules/, use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [{ loader: 'css-loader', query: {
@@ -36,17 +45,17 @@ module.exports = {
           ]
         }),
       }, 
-      { test: /\.scss$/, exclude: /node_modules/, use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [{ loader: 'css-loader', query: {
-                      modules: true,
-                      sourceMap: true,
-                      importLoaders: 2,
-                      localIdentName: '[name]__[local]___[hash:base64:5]'
-                  }
-              },
-              'sass-loader'
-          ]
+      { test: /\.scss$/, exclude: /node_modules\/(?!(font-awesome)\/).*/, use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [{ loader: 'css-loader', query: {
+                    modules: true,
+                    sourceMap: true,
+                    importLoaders: 2,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                }
+            },
+            'sass-loader'
+        ]
         }),
       }
     ]

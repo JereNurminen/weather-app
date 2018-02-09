@@ -27,7 +27,7 @@ export default class CountryHolder extends React.Component {
       return (
         <div>
           {this.state.locations.map(location =>
-            <LocationInfo location={location}/>
+            <LocationInfo location={location} changeSettings={this.changeSettings} settings={this.props.settings}/>
           )}
         </div>
       )

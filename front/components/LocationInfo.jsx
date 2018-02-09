@@ -77,7 +77,7 @@ export default class CountryInfo extends React.Component {
                 </table>
                 
                 {this.state.editorIsOpen ? (
-                    <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor}/>
+                    <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor} changeSettings={this.changeSettings} settings={this.props.settings}/>
                 ) : (
                     <button className='button openEditor' onClick={() => this.toggleEditor(true)}>Add Observation</button>
                 )}

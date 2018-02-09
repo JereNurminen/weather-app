@@ -15,10 +15,6 @@ export default class ObservationEditor extends React.Component {
         this.saveObservation = this.saveObservation.bind(this);
     }
 
-    componentDidMount() {
-
-    }
-
     handleChange(event) {
         this.setState({temperature: event.target.value});
     }
@@ -27,7 +23,7 @@ export default class ObservationEditor extends React.Component {
         console.log(this.state.temperature);
         let data = {
             'location_id': this.state.locationId,
-            'temperature': convertTemperature('c', 'k', this.state.temperature)
+            'temperature': convertTemperature(this.props.settings.temperatureUnit, 'k', this.state.temperature)
         }
         fetch('http://weather.jerenurminen.me/api/observations/', { 
             method: 'POST',
@@ -47,7 +43,7 @@ export default class ObservationEditor extends React.Component {
         return (
             <div className='observationEditor'>
                 <input className='numberInput' type='number' value={this.state.temperature} onChange={this.handleChange}/>
-                <span className='degrees'>°C</span>
+                <span className='degrees'>{this.props.settings.unitDisplay}</span>
                 <button className='save button' onClick={this.saveObservation}>Save</button>
                 <button className='cancel button' onClick={() => this.props.toggleEditor(false)}>Cancel</button>
             </div>
