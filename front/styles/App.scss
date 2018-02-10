@@ -1,3 +1,28 @@
 :global {
-	
+
+	html {
+		font-family: Fira Sans,sans-serif;
+	}
+
+	.sidePanel {
+		height: 100vh;
+		display: block;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 350px;
+	}
+
+	.sidePanel button {
+		margin-left: 0;
+	}
+
+	@media (max-width: 900px) {
+		.sidePanel {
+			height: unset;
+			width: 100%;
+			position: absolute;
+		}
+	}
+
 }
