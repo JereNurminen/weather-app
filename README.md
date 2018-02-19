@@ -16,3 +16,5 @@ The front end is built using React. Mostly because I've been studying it recentl
   This doesn't seem to be practical (if it's even possible) when using mod_wsgi. I may need to use another server for that, maybe Gunicorn.
 
 * Some fancy graphics. (Low priority)
+### Notes
+* The app is currently build in a way that may make it hard to deploy elsewhere, as I've been developing it straight on the server. If you want to see how the finished product functions and looks, just take a look at [weather.jerenurminen.me](weather.jerenurminen.me).
