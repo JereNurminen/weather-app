@@ -4,7 +4,7 @@ import ObservationEditor from './ObservationEditor.jsx';
 import { sortBy } from 'lodash';
 import { head } from 'lodash';
 import { last } from 'lodash';
-import { convertTemperature } from '../functions/functions.js';
+import { kelvinToCelsius } from '../functions/functions.js';
 import '../styles/LocationInfo.scss'
 
 export default class CountryInfo extends React.Component {
@@ -65,13 +65,13 @@ export default class CountryInfo extends React.Component {
                             <th colSpan='2'>Last 24 hours:</th>
                         </tr>
                         <tr>
-                            <td rowSpan='2' className='currentTemperature'>{convertTemperature('k', 'c', last(this.state.location.observations).temperature)}</td>
+                            <td rowSpan='2' className='currentTemperature'>{kelvinToCelsius(last(this.state.location.observations).temperature)}</td>
                             <td>Maximum:</td>
-                            <td>{convertTemperature('k', 'c', this.state.maxObservation.temperature)}</td>
+                            <td>{kelvinToCelsius(this.state.maxObservation.temperature)}</td>
                         </tr>
                         <tr>
                             <td>Minimum:</td>
-                            <td>{convertTemperature('k', 'c', this.state.minObservation.temperature)}</td>
+                            <td>{kelvinToCelsius(this.state.minObservation.temperature)}</td>
                         </tr>
                     </tbody>
                 </table>
