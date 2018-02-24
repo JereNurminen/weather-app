@@ -1,5 +1,15 @@
 :global {
 
+	div.observationEditor {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 30px;
+	}
+
+	div.inputContainer {
+		display: inline-block
+	}
+
 	.numberInput {
 	   -moz-appearance: textfield;
 		font-size: 30px;
@@ -37,12 +47,6 @@
 
 	.cancel.button {
 
-	}
-
-	div.buttonContainer {
-		display: flex;
-		justify-content: space-evenly;
-		margin: 10px 0 0;
 	}
 
 

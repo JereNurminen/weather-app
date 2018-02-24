@@ -9,13 +9,15 @@ export default class ObservationEditor extends React.Component {
         super(props);
         this.state = {
             locationId: this.props.locationId,
-            temperature: 0,
+            temperature: '',
             minTemperatureLimit: -90,
             maxTemperatureLimit: 60
         };
+
         this.handleChange = this.handleChange.bind(this);
         this.saveObservation = this.saveObservation.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.validateTemperature = this.validateTemperature.bind(this);
     }
 
     handleChange(event) {
@@ -28,25 +30,36 @@ export default class ObservationEditor extends React.Component {
         }
     }
 
-    saveObservation() {
-        let temperature = this.state.temperature;
+    validateTemperature(temperature) {
         let regExp = /^([+-]?[1-9]\d*|0)$/;
+
         if (!regExp.test(temperature)) {
             alert('The temperature must be an integer!');
-            return;
+            return false;
         }
+
         if (temperature > this.state.maxTemperatureLimit) {
             alert('Too hot, please check your values again.');
-            return;
+            return false;
         }
+
         if (temperature < this.state.minTemperatureLimit) {
             alert('Too cold, please check your values again.');
-            return;
+            return false;
         }
+
+        return true;
+    }
+
+    saveObservation() {
+        let temperature = this.state.temperature;
+        if (!this.validateTemperature(temperature)) return;
+
         let data = {
             'location_id': this.state.locationId,
             'temperature': celsiusToKelvin(temperature)
         }
+
         fetch('http://weather.jerenurminen.me/api/observations/', { 
             method: 'POST',
             body: JSON.stringify(data),
@@ -57,6 +70,7 @@ export default class ObservationEditor extends React.Component {
         .then(response => response.json())
         .then(responseData => {
             console.log(responseData);
+            this.setState({temperature: ''});
             this.props.update();
         });
     }
@@ -64,13 +78,12 @@ export default class ObservationEditor extends React.Component {
     render() {
         return (
             <div className='observationEditor'>
-                <input className='numberInput' type='number' value={this.state.temperature} onChange={this.handleChange} 
-                        onKeyPress={this.handleKeyPress} min={this.state.minTemperatureLimit} max={this.state.maxTemperatureLimit} step='1'/>
-                <span className='degrees'>{this.props.settings.unitDisplay}</span>
-                <div className="buttonContainer">
-                    <button className='save button' onClick={this.saveObservation}>Save</button>
-                    <button className='cancel button' onClick={() => this.props.toggleEditor(false)}>Cancel</button>
+                <div className='inputContainer'>
+                    <input className='numberInput' type='number' value={this.state.temperature} onChange={this.handleChange} 
+                            onKeyPress={this.handleKeyPress} min={this.state.minTemperatureLimit} max={this.state.maxTemperatureLimit} step='1'/>
+                    <span className='degrees'>°C</span>
                 </div>
+                <button className='save button' onClick={this.saveObservation}>Add</button>
             </div>
         )
     }

@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ObservationEditor from './ObservationEditor.jsx';
-import { sortBy } from 'lodash';
-import { head } from 'lodash';
-import { last } from 'lodash';
+import { sortBy, head, last } from 'lodash';
+import { LineChart, Line, YAxis, Legend, ResponsiveContainer, ReferenceLine} from 'recharts';
 import { kelvinToCelsius, getTemperatureColorCode } from '../functions/functions.js';
 import '../styles/LocationInfo.scss'
 
@@ -61,6 +60,15 @@ export default class CountryInfo extends React.Component {
 
     render() {
         let locationWithBreakline = this.state.location.name.replace(', ', ',</br>');
+        let graphData = this.state.location.observations.map(observation => {
+            let obs = {};
+            obs.time = observation.creation_time;
+            obs.temperature = kelvinToCelsius(observation.temperature);
+            return obs; 
+        });
+        let graphMin = kelvinToCelsius(this.props.extremes.min);
+        let graphMax = kelvinToCelsius(this.props.extremes.max);
+
         return (
             <div className='location' style={{borderColor: this.getColor()}}>
                 <h2 dangerouslySetInnerHTML={{__html: locationWithBreakline}}></h2>
@@ -83,11 +91,14 @@ export default class CountryInfo extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                {this.state.editorIsOpen ? (
-                    <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor} changeSettings={this.changeSettings} settings={this.props.settings}/>
-                ) : (
-                    <button className='button openEditor' onClick={() => this.toggleEditor(true)}>Add Observation</button>
-                )}
+                <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor}/>
+                <ResponsiveContainer height={100} width='100%'>
+                    <LineChart data={graphData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                        <ReferenceLine y={0} label="0" stroke="red" strokeDasharray="1 1" />
+                        <YAxis domain={[graphMin, graphMax]} width={30} margin={{ top: 0, right: 0, left: 0, bottom: 0 }} />
+                        <Line type="monotone" dataKey="temperature" stroke="#8884d8" dot={false}/>
+                    </LineChart>
+                </ResponsiveContainer>
             </div>
         )
     }
