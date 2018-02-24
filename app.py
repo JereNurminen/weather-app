@@ -69,7 +69,9 @@ class Location(db.Model):
 @app.route('/api/observations/', methods = ['POST'])
 def save_observation():
 	observation_data = request.json
-	observation = Observation(temperature = observation_data['temperature'], creation_time = datetime.datetime.now(), location_id = observation_data['location_id'])
+	observation = Observation(temperature = observation_data['temperature'], \
+		creation_time = datetime.datetime.now(), \
+		location_id = observation_data['location_id'])
 	try:
 		observation.temperature = int(observation.temperature)
 	except ValueError:
@@ -77,7 +79,6 @@ def save_observation():
 	db.session.add(observation)
 	db.session.commit()
 	return jsonify(observation.serialize)
-
 
 @app.route('/api/observations/', methods = ['GET'])
 def get_observations():
@@ -103,6 +104,23 @@ def get_location(location_id):
 		return 'Location not found!', 404
 	location_from_db.load_observations()
 	return jsonify(location_from_db.serialize)
+
+@app.route('/api/extremes/', methods = ['GET'])
+def get_extremes():
+	time_filter = datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0)
+	extremes = {
+		'max': Observation.query \
+			.filter(Observation.creation_time > time_filter) \
+			.order_by(Observation.temperature.desc()) \
+			.first() \
+			.serialize,
+		'min': Observation.query \
+			.filter(Observation.creation_time > time_filter) \
+			.order_by(Observation.temperature.asc()) \
+			.first() \
+			.serialize
+	}
+	return jsonify(extremes)
 
 @app.route('/', methods = ['GET'])
 def index():
