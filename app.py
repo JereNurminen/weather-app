@@ -65,7 +65,9 @@ class Location(db.Model):
 ### API ENDPOINTS ###
 #####################
 
-# TODO Error handling
+# This endpoint is for posting new observations via JSON. 
+# TODO Error handling 
+# TODO Proper validation 
 @app.route('/api/observations/', methods = ['POST'])
 def save_observation():
 	observation_data = request.json
@@ -113,12 +115,12 @@ def get_extremes():
 			.filter(Observation.creation_time > time_filter) \
 			.order_by(Observation.temperature.desc()) \
 			.first() \
-			.serialize,
+			.serialize['temperature'],
 		'min': Observation.query \
 			.filter(Observation.creation_time > time_filter) \
 			.order_by(Observation.temperature.asc()) \
 			.first() \
-			.serialize
+			.serialize['temperature']
 	}
 	return jsonify(extremes)
 
