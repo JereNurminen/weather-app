@@ -5,11 +5,13 @@
 	.location {
 		font-family: Fira Sans,sans-serif;
 		display: inline-block;
-		border: #000000 solid 2px;
 		border-radius: 5px;
 		margin: 15px;
 		padding: 10px 20px;
 		width: 25%;
+		border-left: transparent 10px solid;
+		box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+		box-sizing: border-box;
 	}
 
 	.location h2 {

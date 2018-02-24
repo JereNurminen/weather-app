@@ -4,7 +4,7 @@ import ObservationEditor from './ObservationEditor.jsx';
 import { sortBy } from 'lodash';
 import { head } from 'lodash';
 import { last } from 'lodash';
-import { kelvinToCelsius } from '../functions/functions.js';
+import { kelvinToCelsius, getTemperatureColorCode } from '../functions/functions.js';
 import '../styles/LocationInfo.scss'
 
 export default class CountryInfo extends React.Component {
@@ -12,18 +12,17 @@ export default class CountryInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            location: this.props.location
+            location: this.props.location,
+            borderColor: ''
         };
+
         this.getMaxTemperature = this.getMaxTemperature.bind(this);
         this.getMinTemperature = this.getMinTemperature.bind(this);
         this.update = this.update.bind(this);
         this.toggleEditor = this.toggleEditor.bind(this);
+        this.getColor = this.getColor.bind(this);
         this.state.maxObservation = this.getMaxTemperature(this.state.location.observations);
         this.state.minObservation = this.getMinTemperature(this.state.location.observations);
-    }
-
-    componentWillUpdate() {
-
     }
 
     getMaxTemperature(observations) {
@@ -40,6 +39,12 @@ export default class CountryInfo extends React.Component {
         this.setState({editorIsOpen: toggle});
     }
 
+    getColor() {
+        let currentTemperature = last(this.state.location.observations).temperature;
+        console.log(getTemperatureColorCode(currentTemperature));
+        return getTemperatureColorCode(currentTemperature);
+    }
+
     update() {
         fetch(`http://weather.jerenurminen.me/api/locations/${this.state.location.id}`)
         .then(response => response.json())
@@ -51,12 +56,13 @@ export default class CountryInfo extends React.Component {
                 maxObservation: this.getMaxTemperature(responseData.observations)
             });
         });
+
         this.toggleEditor(false);
     }
 
     render() {
         return (
-            <div className='location'>
+            <div className='location' style={{borderColor: this.getColor()}}>
                 <h2>{this.state.location.name}</h2>
                 <table>
                     <tbody>
