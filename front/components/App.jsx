@@ -28,20 +28,9 @@ export default class App extends React.Component {
     render() {
         return (
             <div style={{textAlign: 'center'}}>
-                    <div className='sidePanel'>
                 <h1>Weather-App</h1>
-                {this.state.settingsPanelIsOpen ? (
-                    <div>
-                        <button className='button openSettings' onClick={() => this.toggleSettingsPanel(false)}>Settings</button>
-                        <SettingsPanel settings={this.props.settings} changeSettings={this.changeSettings}/>
-                    </div>
-                ) : (
-                    <div>
-                        <button className='button openSettings' onClick={() => this.toggleSettingsPanel(true)}>Settings</button>
-                    </div>
-                )}
-                </div>
                 <LocationHolder settings={this.state.settings}/>
-            </div>);
+            </div>
+        );
     }
 }

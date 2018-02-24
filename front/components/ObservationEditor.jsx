@@ -67,8 +67,10 @@ export default class ObservationEditor extends React.Component {
                 <input className='numberInput' type='number' value={this.state.temperature} onChange={this.handleChange} 
                         onKeyPress={this.handleKeyPress} min={this.state.minTemperatureLimit} max={this.state.maxTemperatureLimit} step='1'/>
                 <span className='degrees'>{this.props.settings.unitDisplay}</span>
-                <button className='save button' onClick={this.saveObservation}>Save</button>
-                <button className='cancel button' onClick={() => this.props.toggleEditor(false)}>Cancel</button>
+                <div className="buttonContainer">
+                    <button className='save button' onClick={this.saveObservation}>Save</button>
+                    <button className='cancel button' onClick={() => this.props.toggleEditor(false)}>Cancel</button>
+                </div>
             </div>
         )
     }

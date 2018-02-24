@@ -41,7 +41,6 @@ export default class CountryInfo extends React.Component {
 
     getColor() {
         let currentTemperature = last(this.state.location.observations).temperature;
-        console.log(getTemperatureColorCode(currentTemperature));
         return getTemperatureColorCode(currentTemperature);
     }
 
@@ -61,27 +60,29 @@ export default class CountryInfo extends React.Component {
     }
 
     render() {
+        let locationWithBreakline = this.state.location.name.replace(', ', ',</br>');
         return (
             <div className='location' style={{borderColor: this.getColor()}}>
-                <h2>{this.state.location.name}</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>Latest:</th>
-                            <th colSpan='2'>Last 24 hours:</th>
-                        </tr>
-                        <tr>
-                            <td rowSpan='2' className='currentTemperature'>{kelvinToCelsius(last(this.state.location.observations).temperature)}</td>
-                            <td>Maximum:</td>
-                            <td>{kelvinToCelsius(this.state.maxObservation.temperature)}</td>
-                        </tr>
-                        <tr>
-                            <td>Minimum:</td>
-                            <td>{kelvinToCelsius(this.state.minObservation.temperature)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
+                <h2 dangerouslySetInnerHTML={{__html: locationWithBreakline}}></h2>
+                <div className="tableHolder">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Latest:</th>
+                                <th colSpan='2'>Last 24 hours:</th>
+                            </tr>
+                            <tr>
+                                <td rowSpan='2' className='currentTemperature'>{kelvinToCelsius(last(this.state.location.observations).temperature)}</td>
+                                <td>Maximum:</td>
+                                <td>{kelvinToCelsius(this.state.maxObservation.temperature)}</td>
+                            </tr>
+                            <tr>
+                                <td>Minimum:</td>
+                                <td>{kelvinToCelsius(this.state.minObservation.temperature)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 {this.state.editorIsOpen ? (
                     <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor} changeSettings={this.changeSettings} settings={this.props.settings}/>
                 ) : (

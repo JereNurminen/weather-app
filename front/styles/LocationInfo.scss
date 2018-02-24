@@ -5,17 +5,17 @@
 	.location {
 		font-family: Fira Sans,sans-serif;
 		display: inline-block;
-		border-radius: 5px;
+		border-radius: 1px;
 		margin: 15px;
 		padding: 10px 20px;
-		width: 25%;
-		border-left: transparent 10px solid;
+		width: 15%;
+		border-top: transparent 10px solid;
 		box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 		box-sizing: border-box;
 	}
 
 	.location h2 {
-		margin: 0 auto;
+		margin: 20px auto 0;
 	}
 
 	.location .currentTemperature {
@@ -35,6 +35,13 @@
 		cursor: pointer;
 		margin-left: 0;
 		margin-right: 0;
+	}
+
+	div.tableHolder {
+		width: calc(100% + 40px);
+		margin: 30px -20px;
+		background-color: rgba(240,240,240,1);
+		padding: 10px 0;
 	}
 
 	@media (max-width: 1200px) {
