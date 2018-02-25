@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ObservationEditor from './ObservationEditor.jsx';
-import { sortBy, head, last } from 'lodash';
-import { LineChart, Line, YAxis, Legend, ResponsiveContainer, ReferenceLine} from 'recharts';
+import { sortBy, head, last, compact } from 'lodash';
+import { LineChart, Line, XAxis, YAxis, Legend, ResponsiveContainer, ReferenceLine, CartesianGrid} from 'recharts';
 import { kelvinToCelsius, getTemperatureColorCode } from '../functions/functions.js';
 import '../styles/LocationInfo.scss'
 
@@ -68,7 +68,10 @@ export default class CountryInfo extends React.Component {
         });
         let graphMin = kelvinToCelsius(this.props.extremes.min);
         let graphMax = kelvinToCelsius(this.props.extremes.max);
-
+        let gridLines = compact(Array(graphMax - graphMin).fill().map((item, index) => {
+            if ((graphMin + index) % 5 === 0) return graphMin + index;
+        }));
+        console.log(gridLines);
         return (
             <div className='location' style={{borderColor: this.getColor()}}>
                 <h2 dangerouslySetInnerHTML={{__html: locationWithBreakline}}></h2>
@@ -82,11 +85,11 @@ export default class CountryInfo extends React.Component {
                             <tr>
                                 <td rowSpan='2' className='currentTemperature'>{kelvinToCelsius(last(this.state.location.observations).temperature)}</td>
                                 <td>Maximum:</td>
-                                <td>{kelvinToCelsius(this.state.maxObservation.temperature)}</td>
+                                <td className='temperatureExtreme'>{kelvinToCelsius(this.state.maxObservation.temperature)}</td>
                             </tr>
                             <tr>
                                 <td>Minimum:</td>
-                                <td>{kelvinToCelsius(this.state.minObservation.temperature)}</td>
+                                <td className='temperatureExtreme'>{kelvinToCelsius(this.state.minObservation.temperature)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -94,9 +97,13 @@ export default class CountryInfo extends React.Component {
                 <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor}/>
                 <ResponsiveContainer height={100} width='100%'>
                     <LineChart data={graphData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                        <ReferenceLine y={0} label="0" stroke="red" strokeDasharray="1 1" />
-                        <YAxis domain={[graphMin, graphMax]} width={30} margin={{ top: 0, right: 0, left: 0, bottom: 0 }} />
-                        <Line type="monotone" dataKey="temperature" stroke="#8884d8" dot={false}/>
+                        <ReferenceLine y={0} stroke="rgba(0,0,0,0.5)"/>
+                        <XAxis hide={true}/>
+                        <YAxis ticks={[graphMin, 0, graphMax]} mirror={true} 
+                        domain={[graphMin, graphMax]} width={30} interval='preserveStartEnd'
+                        margin={{ top: 0, right: 0, left: 0, bottom: 0 }} />
+                        <Line type="monotone" dataKey="temperature" stroke="rgba(0,0,0,1)" dot={false}/>
+                        <CartesianGrid strokeDasharray="2 3" vertical={false} horizontalPoints={gridLines} stroke="rgba(0,0,0,0.25)"/>
                     </LineChart>
                 </ResponsiveContainer>
             </div>

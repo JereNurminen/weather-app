@@ -19,10 +19,19 @@
 		font-size: 45px;
 	}
 
+	.location .temperatureExtreme, 
+	.location .temperatureExtreme, 
+	.location .currentTemperature {
+		font-weight: 600;
+	}
+
 	.location td,
 	.location th {
 		padding: 5px;
+		font-weight: 400;
 	}
+
+
 
 	.location table {
 		margin: 0 auto;
