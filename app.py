@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, jsonify, session, s
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from config import db_config, secret_key
-import json, datetime
+import json, datetime, logging, os
 # This line calls the constructor for the Flask app, issuing the name of the file (app.py) as a parameter
 app = Flask(__name__)
 # And we set the DEBUG to be 'true' - this allows making changes to the app visible without rebooting the whole server
@@ -13,6 +13,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(pw)s@%(host)s:%(port
 # Same as db_config, the secret key is stored in config.py
 app.secret_key = secret_key
 db = SQLAlchemy(app)
+# Here we configure the logger to use a file called 'observations.log'
+log_path = '%s/weather-app.log' % os.getcwd()
+logging.basicConfig(filename=log_path, level=logging.INFO)
 
 ##############
 ### MODELS ###
@@ -80,6 +83,7 @@ def save_observation():
 		return 'The temperature must be an integer!', 400
 	db.session.add(observation)
 	db.session.commit()
+	logging.info('time: %s, location: %s, temperature: %s' % (observation.creation_time, observation.location_id, observation.temperature))
 	return jsonify(observation.serialize)
 
 # Returns all observations, grouped by location.
