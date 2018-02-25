@@ -62,7 +62,7 @@ export default class CountryInfo extends React.Component {
         let locationWithBreakline = this.state.location.name.replace(', ', ',</br>');
         let graphData = this.state.location.observations.map(observation => {
             let obs = {};
-            obs.time = observation.creation_time;
+            obs.time = Date.parse(observation.creation_time);
             obs.temperature = kelvinToCelsius(observation.temperature);
             return obs; 
         });
@@ -75,7 +75,7 @@ export default class CountryInfo extends React.Component {
         return (
             <div className='location' style={{borderColor: this.getColor()}}>
                 <h2 dangerouslySetInnerHTML={{__html: locationWithBreakline}}></h2>
-                <div className="tableHolder">
+                <div className='tableHolder'>
                     <table>
                         <tbody>
                             <tr>
@@ -96,14 +96,13 @@ export default class CountryInfo extends React.Component {
                 </div>
                 <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor}/>
                 <ResponsiveContainer height={100} width='100%'>
-                    <LineChart data={graphData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                        <ReferenceLine y={0} stroke="rgba(0,0,0,0.5)"/>
-                        <XAxis hide={true}/>
-                        <YAxis ticks={[graphMin, 0, graphMax]} mirror={true} 
+                    <LineChart data={graphData} margin={{ top: 1, right: 1, left: 1, bottom: 1 }}>
+                        <ReferenceLine y={0} stroke='rgba(0,0,0,0.25)'/>
+                        <XAxis hide={true} dataKey='time' scale='time'/>
+                        <YAxis ticks={[graphMin, 0, graphMax]} mirror={true} dataKey='temperature'
                         domain={[graphMin, graphMax]} width={30} interval='preserveStartEnd'
-                        margin={{ top: 0, right: 0, left: 0, bottom: 0 }} />
-                        <Line type="monotone" dataKey="temperature" stroke="rgba(0,0,0,1)" dot={false}/>
-                        <CartesianGrid strokeDasharray="2 3" vertical={false} horizontalPoints={gridLines} stroke="rgba(0,0,0,0.25)"/>
+                        margin={{ top: 0, right: 0, left: 0, bottom: 0 }} type='number'/>
+                        <Line type='monotone' dataKey='temperature' stroke='rgba(0,0,0,1)' dot={false}/>
                     </LineChart>
                 </ResponsiveContainer>
             </div>
