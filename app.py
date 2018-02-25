@@ -82,6 +82,7 @@ def save_observation():
 	db.session.commit()
 	return jsonify(observation.serialize)
 
+# Returns all observations, grouped by location.
 @app.route('/api/observations/', methods = ['GET'])
 def get_observations():
 	observations = []
@@ -91,6 +92,9 @@ def get_observations():
 		observations.append(location.serialize)
 	return jsonify(observations)
 
+# Returns just locations, no observations or anything interesting, really.
+# Not in use anywhere.
+# TODO Remove this
 @app.route('/api/locations/<int:location_id>', methods = ['GET'])
 def get_location(location_id):
 	location_from_db = Location.query.filter_by(id = location_id).first()
@@ -99,6 +103,9 @@ def get_location(location_id):
 	location_from_db.load_observations()
 	return jsonify(location_from_db.serialize)
 
+# Returns the lowest and highest temperatures anywhere in the last 24 hours.
+# Only use for this is when the front end generates graphs, so it can set
+# the Y axis of them nicely and neatly
 @app.route('/api/extremes/', methods = ['GET'])
 def get_extremes():
 	time_filter = datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0)
@@ -116,6 +123,8 @@ def get_extremes():
 	}
 	return jsonify(extremes)
 
+# When the index is requested, we just serve it as a file as there is no need for 
+# rendering a template. All other static content is served by Apache from the static/ folder. 
 @app.route('/', methods = ['GET'])
 def index():
 	return send_from_directory('static/dist/', 'index.html')
