@@ -92,6 +92,15 @@ def get_observations():
 		observations.append(location.serialize)
 	return jsonify(observations)
 
+# Returns the info and observations of a specific location.
+@app.route('/api/locations/<int:location_id>', methods = ['GET'])
+def get_location(location_id):
+	location_from_db = Location.query.filter_by(id = location_id).first()
+	if not location_from_db:
+		return 'Location not found!', 404
+	location_from_db.load_observations()
+	return jsonify(location_from_db.serialize)
+
 # Returns the lowest and highest temperatures anywhere in the last 24 hours.
 # Only use for this is when the front end generates graphs, so it can set
 # the Y axis of them nicely and neatly
