@@ -84,19 +84,11 @@ def save_observation():
 
 @app.route('/api/observations/', methods = ['GET'])
 def get_observations():
-	group_by = request.args.get('group_by', default = 'location', type = str)
-	if group_by not in ['location', 'observation']:
-		return 'Invalid \'group_by\' -value', 402
 	observations = []
-	if group_by == 'observation':
-		observations_from_db = Observation.query.all()
-		for observation in observations_from_db:
-			observations.append(observation)
-	elif group_by == 'location':
-		locations_from_db = Location.query.all()
-		for location in locations_from_db:
-			location.load_observations()
-			observations.append(location.serialize)
+	locations_from_db = Location.query.all()
+	for location in locations_from_db:
+		location.load_observations()
+		observations.append(location.serialize)
 	return jsonify(observations)
 
 @app.route('/api/locations/<int:location_id>', methods = ['GET'])
