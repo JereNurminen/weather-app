@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, redirect, jsonify, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from flask_cors import CORS
+from flask_socketio import SocketIO
 from config import db_config, secret_key
 import json, datetime, logging, os
 # This line calls the constructor for the Flask app, issuing the name of the file (app.py) as a parameter
@@ -16,6 +18,10 @@ db = SQLAlchemy(app)
 # Here we configure the logger to use a file called 'observations.log'
 log_path = '%s/weather-app.log' % os.getcwd()
 logging.basicConfig(filename=log_path, level=logging.INFO)
+# This enables making CORS requests to this server
+CORS(app)
+# Sets up SocketIO server
+socketio = SocketIO(app)
 
 ##############
 ### MODELS ###
@@ -132,5 +138,6 @@ def index():
 	return send_from_directory('static/dist/', 'index.html')
 
 # Only used when using the dev server.
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    socketio.run(app)
+#    app.run(host='0.0.0.0', port=5000)
