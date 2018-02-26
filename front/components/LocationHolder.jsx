@@ -29,7 +29,6 @@ export default class CountryHolder extends React.Component {
         fetch('http://weather.jerenurminen.me/api/observations/')
         .then(response => response.json())
         .then(responseData => {
-            console.log(this);
             this.setState({
                 locations: responseData
             });
@@ -40,7 +39,6 @@ export default class CountryHolder extends React.Component {
         fetch('http://weather.jerenurminen.me/api/extremes/')
         .then(response => response.json())
         .then(responseData => {
-            console.log(this);
             this.setState({
                 extremes: responseData
             });
@@ -51,7 +49,7 @@ export default class CountryHolder extends React.Component {
         return (
             <div className='locationHolder'>
             {this.state.locations.map(location =>
-                <LocationInfo location={location} extremes={this.state.extremes}/>
+                <LocationInfo location={location} extremes={this.state.extremes} socket={this.props.socket}/>
             )}
             </div>
         )

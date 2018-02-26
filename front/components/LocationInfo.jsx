@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ObservationEditor from './ObservationEditor.jsx';
 import { sortBy, head, last, compact } from 'lodash';
-import { LineChart, Line, XAxis, YAxis, Legend, ResponsiveContainer, ReferenceLine, CartesianGrid} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Legend, ResponsiveContainer, ReferenceLine} from 'recharts';
 import { kelvinToCelsius, getTemperatureColorCode } from '../functions/functions.js';
 import '../styles/LocationInfo.scss'
 
@@ -20,8 +20,11 @@ export default class CountryInfo extends React.Component {
         this.update = this.update.bind(this);
         this.toggleEditor = this.toggleEditor.bind(this);
         this.getColor = this.getColor.bind(this);
+        this.onNewObservation = this.onNewObservation.bind(this);
         this.state.maxObservation = this.getMaxTemperature(this.state.location.observations);
         this.state.minObservation = this.getMinTemperature(this.state.location.observations);
+
+        props.socket.on('new_observation', (data) => {this.onNewObservation(data)});
     }
 
     getMaxTemperature(observations) {
@@ -43,11 +46,17 @@ export default class CountryInfo extends React.Component {
         return getTemperatureColorCode(currentTemperature);
     }
 
+    onNewObservation(data) {
+        if (data == this.state.location.id) {
+            console.log('New observation at ' + this.state.location.name);
+            this.update();
+        }
+    }
+
     update() {
-        fetch(`http://weather.jerenurminen.me/api/locations/${this.state.location.id}`)
+        fetch(`http://weather.jerenurminen.me:5000/api/locations/${this.state.location.id}`)
         .then(response => response.json())
         .then(responseData => {
-            console.log(responseData);
             this.setState({
                 location: responseData,
                 minObservation: this.getMinTemperature(responseData.observations),
@@ -68,10 +77,6 @@ export default class CountryInfo extends React.Component {
         });
         let graphMin = kelvinToCelsius(this.props.extremes.min);
         let graphMax = kelvinToCelsius(this.props.extremes.max);
-        let gridLines = compact(Array(graphMax - graphMin).fill().map((item, index) => {
-            if ((graphMin + index) % 5 === 0) return graphMin + index;
-        }));
-        console.log(gridLines);
         return (
             <div className='location' style={{borderColor: this.getColor()}}>
                 <h2 dangerouslySetInnerHTML={{__html: locationWithBreakline}}></h2>
@@ -97,7 +102,7 @@ export default class CountryInfo extends React.Component {
                 <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor}/>
                 <ResponsiveContainer height={100} width='100%'>
                     <LineChart data={graphData} margin={{ top: 1, right: 1, left: 1, bottom: 1 }}>
-                        <ReferenceLine y={0} stroke='rgba(0,0,0,0.25)'/>
+                        <ReferenceLine y={0} stroke='hsla(360, 60%, 60%, 0.6)'/>
                         <XAxis hide={true} dataKey='time' scale='time'/>
                         <YAxis ticks={[graphMin, 0, graphMax]} mirror={true} dataKey='temperature'
                         domain={[graphMin, graphMax]} width={30} interval='preserveStartEnd'

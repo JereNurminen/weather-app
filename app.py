@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, jsonify, session, s
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_cors import CORS
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from config import db_config, secret_key
 import json, datetime, logging, os
 # This line calls the constructor for the Flask app, issuing the name of the file (app.py) as a parameter
@@ -90,6 +90,7 @@ def save_observation():
 	db.session.add(observation)
 	db.session.commit()
 	logging.info('time: %s, location: %s, temperature: %s' % (observation.creation_time, observation.location_id, observation.temperature))
+	socketio.emit('new_observation', observation.location_id)
 	return jsonify(observation.serialize)
 
 # Returns all observations, grouped by location.

@@ -60,16 +60,16 @@ export default class ObservationEditor extends React.Component {
             'temperature': celsiusToKelvin(temperature)
         }
 
-        fetch('http://weather.jerenurminen.me/api/observations/', { 
+        fetch('http://weather.jerenurminen.me:5000/api/observations/', { 
             method: 'POST',
             body: JSON.stringify(data),
+            mode: 'cors',
             headers: new Headers({
                'Content-Type': 'application/json'
             })
         })
         .then(response => response.json())
         .then(responseData => {
-            console.log(responseData);
             this.setState({temperature: ''});
             this.props.update();
         });
