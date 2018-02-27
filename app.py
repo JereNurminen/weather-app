@@ -5,6 +5,8 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from config import db_config, secret_key
 import json, datetime, logging, os
+
+
 # This line calls the constructor for the Flask app, issuing the name of the file (app.py) as a parameter
 app = Flask(__name__)
 # And we set the DEBUG to be 'true' - this allows making changes to the app visible without rebooting the whole server
@@ -15,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(pw)s@%(host)s:%(port
 # Same as db_config, the secret key is stored in config.py
 app.secret_key = secret_key
 db = SQLAlchemy(app)
-# Here we configure the logger to use a file called 'observations.log'
+# Here we configure the logger
 log_path = '%s/weather-app.log' % os.getcwd()
 logging.basicConfig(filename=log_path, level=logging.INFO)
 # This enables making CORS requests to this server
@@ -25,12 +27,11 @@ socketio = SocketIO(app)
 # All observations with this amount (or more) of flags will be filtered out.
 MAX_FLAGS = 5
 
+
 ##############
 ### MODELS ###
 ##############
 
-
-# We define a Observation class to be used by SQLAlchemy when accessing the database
 class Observation(db.Model):
 	# As per usual, the primary key is an auto incrementing integer called 'id'
 	# The other attributes should be pretty self explanatory as well
@@ -83,9 +84,7 @@ class Location(db.Model):
 ### API ENDPOINTS ###
 #####################
 
-# This endpoint is for posting new observations via JSON. 
-# TODO Error handling 
-# TODO Proper validation 
+# This endpoint is for posting new observations via JSON.
 @app.route('/api/observations/', methods = ['POST'])
 def save_observation():
 	observation_data = request.json
@@ -122,6 +121,8 @@ def get_observation(observation_id):
 
 
 # Returns the info and observations of a specific location.
+# Limits the search to observations from last 24 hours by default, 
+# overridable with path argument.
 @app.route('/api/locations/<int:location_id>', methods = ['GET'])
 def get_location(location_id):
 	days = request.args.get('days', default = 1, type = int)
@@ -134,7 +135,7 @@ def get_location(location_id):
 
 # Returns the lowest and highest temperatures anywhere in the last 24 hours.
 # Only use for this is when the front end generates graphs, so it can set
-# the Y axis of them nicely and neatly
+# the Y axes of them nicely and neatly
 @app.route('/api/extremes/', methods = ['GET'])
 def get_extremes():
 	days = request.args.get('days', default = 1, type = int)
@@ -176,4 +177,3 @@ def index():
 # Only used when using the dev server.
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000)
-#    app.run(host='0.0.0.0', port=5000)
