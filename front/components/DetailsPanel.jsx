@@ -11,13 +11,15 @@ export default class ListPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            observations: [],
+            observations: this.props.observations,
             hasLoaded: false
         };
 
         this.loadObservations = this.loadObservations.bind(this);
         this.flagObservation = this.flagObservation.bind(this);
 
+        // Observations are loaded seperately instead of initialized from props 
+        // because we show observations from 7 days 
         this.loadObservations();
     }
 
@@ -48,6 +50,7 @@ export default class ListPanel extends React.Component {
                     <span className='title'>Details for <strong>{this.props.location.name}</strong></span><br/>
                     <span className='coordinates'>Latitude:&nbsp;<strong>{this.props.location.latitude}</strong>, </span>
                     <span className='coordinates'>Longitude:&nbsp;<strong>{this.props.location.longitude}</strong></span><br/>
+                    <span className='timezone'>Time zone:&nbsp;<strong>UTC&nbsp;{this.props.location.timezone}</strong></span><br/>
                     <div className='tableContainer'>
                         <table>
                             <tr>

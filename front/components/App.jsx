@@ -25,6 +25,12 @@ export default class App extends React.Component {
             <div style={{textAlign: 'center'}}>
                 <h1>Weather-App</h1>
                 <LocationHolder socket={socket}/>
+                <div className="footer" style={{padding: '20px 0'}}>
+                    <span>
+                        Jere Nurminen, 2018<br/>
+                        <a href="https://github.com/JereNurminen/weather-app">Source code on GitHub</a>
+                    </span>
+                </div>
             </div>
         );
     }
