@@ -4,8 +4,8 @@ from weather_api import api_key
 API_URL = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
 
 def main():
-	schedule.every(30).minutes.do(job)
-
+	schedule.every().hour.do(job)
+	
 	while True:
 		schedule.run_pending()
 		time.sleep(1000)
