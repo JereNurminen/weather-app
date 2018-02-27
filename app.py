@@ -36,6 +36,7 @@ class Observation(db.Model):
 	creation_time = db.Column(db.DateTime, unique=False, nullable=False)
 	location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
 	location = relationship("Location")
+	flags = db.Column(db.Integer, unique=False, nullable=True)
 	# This is needed in order to jsonify the object properly
 	@property
 	def serialize(self):
@@ -43,7 +44,8 @@ class Observation(db.Model):
 			'id': self.id,
 			'temperature': self.temperature,
 			'creation_time': self.creation_time,
-			'location': self.location.name
+			'location': self.location.name,
+			'flags': self.flags
 		}
 
 class Location(db.Model):
@@ -61,11 +63,13 @@ class Location(db.Model):
 			'latitude': self.latitude,
 			'longitude': self.longitude,
 			'observations': self.observations
-		}	
-	def load_observations(self):
+		}
+
+	def load_observations(self, days):
+		hours = days * 24
 		observations_from_db = Observation.query \
 			.filter_by(location_id = self.id) \
-			.filter(Observation.creation_time > (datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0))) \
+			.filter(Observation.creation_time > (datetime.datetime.now() - datetime.timedelta(hours=hours, minutes=0, seconds=0))) \
 			.all()
 		self.observations = list(map(lambda x: x.serialize, observations_from_db))
 	
@@ -99,17 +103,18 @@ def get_observations():
 	observations = []
 	locations_from_db = Location.query.all()
 	for location in locations_from_db:
-		location.load_observations()
+		location.load_observations(days=1)
 		observations.append(location.serialize)
 	return jsonify(observations)
 
 # Returns the info and observations of a specific location.
 @app.route('/api/locations/<int:location_id>', methods = ['GET'])
 def get_location(location_id):
+	days = request.args.get('days', default = 1, type = int)
 	location_from_db = Location.query.filter_by(id = location_id).first()
 	if not location_from_db:
 		return 'Location not found!', 404
-	location_from_db.load_observations()
+	location_from_db.load_observations(days=days)
 	return jsonify(location_from_db.serialize)
 
 # Returns the lowest and highest temperatures anywhere in the last 24 hours.
@@ -140,5 +145,5 @@ def index():
 
 # Only used when using the dev server.
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0', port=5000)
 #    app.run(host='0.0.0.0', port=5000)

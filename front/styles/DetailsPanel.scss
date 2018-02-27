@@ -1,0 +1,47 @@
+:global {
+	div.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(0,0,0,0.8);
+		z-index: 1;
+		cursor: pointer;
+	}
+
+	div.modal {
+		background-color: #fff;
+		display: inline-block;
+		margin: 30px 0;
+		padding: 10px 30px 20px;
+		border-radius: 2px;
+		box-shadow: 0 5px 9px rgba(0,0,0,0.7);
+		max-width: 90vw;
+		max-height: 90vh;
+		height: 80vh;
+		cursor: auto;
+	}
+
+	div.tableContainer {
+		overflow-y: scroll;
+		display: block;
+		position: relative;
+		margin-bottom: 10px;
+		max-height: 85%;
+		padding: 0 20px 0 0;
+	}
+
+	div.tableContainer table {
+		border-spacing: 0;
+	}
+
+	div.tableContainer td:first-child {
+		border-left: 4px solid #fff;
+	}
+
+	img.flagIcon {
+		cursor: pointer;
+	}
+
+}

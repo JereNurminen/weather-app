@@ -50,6 +50,12 @@
 		padding: 10px 0;
 	}
 
+	div.openDetails {
+		cursor: pointer;
+		text-decoration: underline;
+		margin: 20px 0 10px;
+	}
+
 	@media (max-width: 1200px) {
 		.location {
 			width: 40%;

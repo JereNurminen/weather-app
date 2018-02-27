@@ -8,28 +8,6 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 };
 
-/*
-function getTemperatureColorCode(t) {
-
-	let colorCode = '#ffffff'
-
-	if (t < 260) {		// < -15
-		colorCode = "#bffcff"
-	} else if (t < 260) {		// < -5
-		colorCode = "#b2e2ff"
-	} else if (t < 270) {		// < 5
-		colorCode = "#A1BFFF"
-	} else if (t < 280) {		// < 15
-		colorCode = "#DFE7FF"
-	} else if (t < 290) {		// < 25
-		colorCode = "#FFE4CC"
-	} else {					// > 25
-		colorCode = "#ffb26b"
-	}
-
-	return colorCode;
-}
-*/
 
 function getTemperatureColorCode(t) {
 	// Limits the temp between certain range
@@ -39,14 +17,14 @@ function getTemperatureColorCode(t) {
 
 	// Values for the color representations of the temperature at seperator and the extreme
 	const WARM = {
-		min: {
-			'h': 23,
+		start: {
+			'h': 47,
 			's': 100,
-			'l': 72,
+			'l': 100,
 			'a': 1
 		},
-		max: {
-			'h': 21,
+		end: {
+			'h': 19,
 			's': 100,
 			'l': 50,
 			'a': 1
@@ -54,16 +32,16 @@ function getTemperatureColorCode(t) {
 	}
 
 	const COLD = {
-		min: {
-			'h': 185,
+		start: {
+			'h': 277,
 			's': 100,
-			'l': 80,
+			'l': 67,
 			'a': 1
 		},
-		max: {
-			'h': 195,
+		end: {
+			'h': 177,
 			's': 100,
-			'l': 100,
+			'l': 89,
 			'a': 1
 		}
 	}
@@ -76,16 +54,16 @@ function getTemperatureColorCode(t) {
 	}
 
 	// Temperatures below this are considered cold, above hot
-	const SEPERATOR = 280; // ~7 degrees Celsius
+	const SEPERATOR = 273; // ~7 degrees Celsius
 
 	if (t <= SEPERATOR) {
-		color.h = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.min.h, COLD.max.h);
-		color.s = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.min.s, COLD.max.s);
-		color.l = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.min.l, COLD.max.l);
+		color.h = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.start.h, COLD.end.h);
+		color.s = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.start.s, COLD.end.s);
+		color.l = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.start.l, COLD.end.l);
 	} else if (t > SEPERATOR) {
-		color.h = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.min.h, WARM.max.h);
-		color.s = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.min.s, WARM.max.s);
-		color.l = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.min.l, WARM.max.l);
+		color.h = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.start.h, WARM.end.h);
+		color.s = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.start.s, WARM.end.s);
+		color.l = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.start.l, WARM.end.l);
 	}
 
 	return `hsla(${color.h}, ${color.s}%, ${color.l}%, ${color.a})`;

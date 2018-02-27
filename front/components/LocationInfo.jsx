@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ObservationEditor from './ObservationEditor.jsx';
+import DetailsPanel from './DetailsPanel.jsx';
 import { sortBy, head, last, compact } from 'lodash';
 import { LineChart, Line, XAxis, YAxis, Legend, ResponsiveContainer, ReferenceLine} from 'recharts';
 import { kelvinToCelsius, getTemperatureColorCode } from '../functions/functions.js';
@@ -12,15 +13,17 @@ export default class CountryInfo extends React.Component {
         super(props);
         this.state = {
             location: this.props.location,
-            borderColor: ''
+            borderColor: '',
+            showDetails: false
         };
 
         this.getMaxTemperature = this.getMaxTemperature.bind(this);
         this.getMinTemperature = this.getMinTemperature.bind(this);
         this.update = this.update.bind(this);
-        this.toggleEditor = this.toggleEditor.bind(this);
         this.getColor = this.getColor.bind(this);
         this.onNewObservation = this.onNewObservation.bind(this);
+        this.openDetails = this.openDetails.bind(this);
+
         this.state.maxObservation = this.getMaxTemperature(this.state.location.observations);
         this.state.minObservation = this.getMinTemperature(this.state.location.observations);
 
@@ -35,10 +38,6 @@ export default class CountryInfo extends React.Component {
     getMinTemperature(observations) {
         let sortedObservations = sortBy(observations, (o) => { return o.temperature; });
         return head(sortedObservations);
-    }
-
-    toggleEditor(toggle) {
-        this.setState({editorIsOpen: toggle});
     }
 
     getColor() {
@@ -63,8 +62,10 @@ export default class CountryInfo extends React.Component {
                 maxObservation: this.getMaxTemperature(responseData.observations)
             });
         });
+    }
 
-        this.toggleEditor(false);
+    openDetails(toggle) {
+        this.setState({showDetails: toggle});
     }
 
     render() {
@@ -99,7 +100,7 @@ export default class CountryInfo extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                <ObservationEditor locationId={this.state.location.id} update={this.update} toggleEditor={this.toggleEditor}/>
+                <ObservationEditor locationId={this.state.location.id} update={this.update}/>
                 <ResponsiveContainer height={100} width='100%'>
                     <LineChart data={graphData} margin={{ top: 1, right: 1, left: 1, bottom: 1 }}>
                         <ReferenceLine y={0} stroke='hsla(360, 60%, 60%, 0.6)'/>
@@ -110,6 +111,13 @@ export default class CountryInfo extends React.Component {
                         <Line type='monotone' dataKey='temperature' stroke='rgba(0,0,0,1)' dot={false}/>
                     </LineChart>
                 </ResponsiveContainer>
+                <div className="openDetails" onClick={() => this.openDetails(true)}>
+                    <span>Detailed view of data</span>
+                </div>
+                {this.state.showDetails ?
+                    <DetailsPanel location={this.state.location} openDetails={this.openDetails}/> :
+                    null
+                }
             </div>
         )
     }
