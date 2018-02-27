@@ -108,7 +108,7 @@ export default class CountryInfo extends React.Component {
                         <YAxis ticks={[graphMin, 0, graphMax]} mirror={true} dataKey='temperature'
                         domain={[graphMin, graphMax]} width={30} interval='preserveStartEnd'
                         margin={{ top: 0, right: 0, left: 0, bottom: 0 }} type='number'/>
-                        <Line type='monotone' dataKey='temperature' stroke='rgba(0,0,0,1)' dot={false}/>
+                        <Line type='monotone' dataKey='temperature' stroke='rgba(0,0,0,1)' dot={false} activeDot={false}/>
                     </LineChart>
                 </ResponsiveContainer>
                 <div className="openDetails" onClick={() => this.openDetails(true)}>

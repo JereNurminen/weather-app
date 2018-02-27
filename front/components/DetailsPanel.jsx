@@ -17,7 +17,6 @@ export default class ListPanel extends React.Component {
 
         this.loadObservations = this.loadObservations.bind(this);
         this.flagObservation = this.flagObservation.bind(this);
-        //this.updateObservation = this.updateObservation.bind(this);
 
         this.loadObservations();
     }
@@ -32,39 +31,36 @@ export default class ListPanel extends React.Component {
             });
         });
     }
-/*
-    updateObservation(id) {
-        fetch(`http://weather.jerenurminen.me:5000/api/observations/${id}`)
-        .then(response => response.json())
-        .then(responseData => {
-            this.setState({
-                observations: 
-            });
-        });
-    }
-*/
+
     flagObservation(id) {
         fetch(`http://weather.jerenurminen.me:5000/api/flag/${id}`, { 
             method: 'POST',
             mode: 'cors'
         }).then(response => {
-            //this.updateObservation(id);
             this.loadObservations();
         });
     }
 
     render() {
         return (
-            <div className="overlay" onClick={() => this.props.openDetails(false)}>
-                <div className="modal" onClick={(e) => e.stopPropagation()}>
-                    <h3>Details for {this.props.location.name}</h3>
-                    <div className="tableContainer">
+            <div className='overlay' onClick={() => this.props.openDetails(false)}>
+                <div className='modal' onClick={(e) => e.stopPropagation()}>
+                    <span className='title'>Details for <strong>{this.props.location.name}</strong></span><br/>
+                    <span className='coordinates'>Latitude:&nbsp;<strong>{this.props.location.latitude}</strong>, </span>
+                    <span className='coordinates'>Longitude:&nbsp;<strong>{this.props.location.longitude}</strong></span><br/>
+                    <div className='tableContainer'>
                         <table>
                             <tr>
                                 <th></th>
-                                <th>Time</th>
-                                <th>Temperature</th>
-                                <th>Flag</th>
+                                <th>
+                                    <span title='Time of observation' className='tooltip'>Time</span>
+                                </th>
+                                <th>
+                                    <span title='The temperature, in degrees Celsius' className='tooltip'>Temperature</span>
+                                </th>
+                                <th>
+                                    <span title='Click the flag icon to flag an observation as incorrect or inaccurate' className='tooltip'>Flag</span>
+                                </th>
                             </tr>
                             {this.state.hasLoaded ? (
                                 <tbody>
@@ -72,10 +68,10 @@ export default class ListPanel extends React.Component {
                                     <tr key={observation.id}>
                                         <td style={{borderColor: getTemperatureColorCode(observation.temperature)}}>{observation.id}</td>
                                         <td>{observation.creation_time}</td>
-                                        <td>{kelvinToCelsius(observation.temperature)}</td>
+                                        <td className='temperature'>{kelvinToCelsius(observation.temperature)}°C</td>
                                         <td onClick={() => {this.flagObservation(observation.id)}}>
-                                            {observation.flags ? (<span className="flags">{observation.flags} x </span>) : (null)}
-                                            <img className='flagIcon' src={flagIcon} alt="A flag icon"/>
+                                            {observation.flags ? (<span className='flags'>{observation.flags} x </span>) : (null)}
+                                            <img className='flagIcon' src={flagIcon} alt='A flag icon'/>
                                         </td>
                                     </tr>
                                 )}
@@ -87,7 +83,7 @@ export default class ListPanel extends React.Component {
                             )}
                         </table>
                     </div>
-                    <span className="closePanel" onClick={() => this.props.openDetails(false)}>Close Panel</span>
+                    <span className='closePanel' onClick={() => this.props.openDetails(false)}>Close Panel</span>
                 </div>
             </div>
         )

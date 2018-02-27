@@ -14,13 +14,21 @@
 		background-color: #fff;
 		display: inline-block;
 		margin: 30px 0;
-		padding: 10px 30px 20px;
+		padding: 30px;
 		border-radius: 2px;
 		box-shadow: 0 5px 9px rgba(0,0,0,0.7);
 		max-width: 90vw;
 		max-height: 90vh;
 		height: 80vh;
 		cursor: auto;
+	}
+
+	span.title {
+		font-size: 30px;
+	}
+
+	span.coordinates {
+
 	}
 
 	div.tableContainer {
@@ -30,25 +38,72 @@
 		margin-bottom: 10px;
 		max-height: 85%;
 		padding: 0 20px 0 0;
+		margin: 20px 0 10px;
 	}
 
 	div.tableContainer table {
 		border-spacing: 0;
 	}
 
+	div.tableContainer td {
+		padding: 5px 10px;
+	}
+
 	div.tableContainer td:first-child {
 		border-left: 10px solid #fff;
-		padding: 0 0 0 15px;
+		padding-left: 15px;
 	}
 
 	img.flagIcon {
 		cursor: pointer;
 		width: 85%;
+		max-width: 30px;
 	}
 
 	span.closePanel {
 		text-decoration: underline;
 		cursor: pointer;
+	}
+
+	td.temperature {
+		font-weight: 600;
+		font-size: 18px;
+	}
+
+	.tooltip {
+		position: relative;
+		display: inline-block;
+		border-bottom: 1px dotted black;
+	}
+
+	.tooltip .tooltipText {
+		visibility: hidden;
+		width: 120px;
+		background-color: black;
+		color: #fff;
+		text-align: center;
+		border-radius: 6px;
+		padding: 5px 0;
+		position: absolute;
+		z-index: 1;
+		bottom: 150%;
+		left: 50%;
+		margin-left: -60px;
+	}
+
+	.tooltip .tooltipText::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		margin-left: -5px;
+		border-width: 5px;
+		border-style: solid;
+		border-color: black transparent transparent transparent;
+	}
+
+	.tooltip:hover .tooltipText {
+		visibility: visible;
 	}
 
 }
