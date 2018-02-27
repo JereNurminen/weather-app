@@ -35,12 +35,16 @@ export default class ListPanel extends React.Component {
     }
 
     flagObservation(id) {
-        fetch(`http://weather.jerenurminen.me:5000/api/flag/${id}`, { 
-            method: 'POST',
-            mode: 'cors'
-        }).then(response => {
-            this.loadObservations();
-        });
+        let confirmMsg = `Are you sure you want to flag observation ${id} for review?`;
+        if (confirm(confirmMsg)) {
+            fetch(`http://weather.jerenurminen.me:5000/api/flag/${id}`, { 
+                method: 'POST',
+                mode: 'cors'
+            }).then(response => {
+                this.loadObservations();
+                alert('Observation flagged!');
+            });
+        }
     }
 
     render() {
@@ -72,7 +76,7 @@ export default class ListPanel extends React.Component {
                                         <td style={{borderColor: getTemperatureColorCode(observation.temperature)}}>{observation.id}</td>
                                         <td>{observation.creation_time}</td>
                                         <td className='temperature'>{kelvinToCelsius(observation.temperature)}°C</td>
-                                        <td onClick={() => {this.flagObservation(observation.id)}}>
+                                        <td className='flagBox' onClick={() => {this.flagObservation(observation.id)}}>
                                             {observation.flags ? (<span className='flags'>{observation.flags} x </span>) : (null)}
                                             <img className='flagIcon' src={flagIcon} alt='A flag icon'/>
                                         </td>
