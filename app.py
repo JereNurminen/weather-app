@@ -22,10 +22,13 @@ logging.basicConfig(filename=log_path, level=logging.INFO)
 CORS(app)
 # Sets up SocketIO server
 socketio = SocketIO(app)
+# All observations with this amount (or more) of flags will be filtered out.
+MAX_FLAGS = 5
 
 ##############
 ### MODELS ###
 ##############
+
 
 # We define a Observation class to be used by SQLAlchemy when accessing the database
 class Observation(db.Model):
@@ -36,7 +39,7 @@ class Observation(db.Model):
 	creation_time = db.Column(db.DateTime, unique=False, nullable=False)
 	location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
 	location = relationship("Location")
-	flags = db.Column(db.Integer, unique=False, nullable=True)
+	flags = db.Column(db.Integer, unique=False, nullable=True, default=0)
 	# This is needed in order to jsonify the object properly
 	@property
 	def serialize(self):
@@ -47,6 +50,7 @@ class Observation(db.Model):
 			'location': self.location.name,
 			'flags': self.flags
 		}
+
 
 class Location(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -70,6 +74,7 @@ class Location(db.Model):
 		observations_from_db = Observation.query \
 			.filter_by(location_id = self.id) \
 			.filter(Observation.creation_time > (datetime.datetime.now() - datetime.timedelta(hours=hours, minutes=0, seconds=0))) \
+			.filter(Observation.flags < MAX_FLAGS) \
 			.all()
 		self.observations = list(map(lambda x: x.serialize, observations_from_db))
 	
@@ -97,6 +102,7 @@ def save_observation():
 	socketio.emit('new_observation', observation.location_id)
 	return jsonify(observation.serialize)
 
+
 # Returns all observations, grouped by location.
 @app.route('/api/observations/', methods = ['GET'])
 def get_observations():
@@ -107,11 +113,13 @@ def get_observations():
 		observations.append(location.serialize)
 	return jsonify(observations)
 
+
 # Returns specific observation
 @app.route('/api/observations/<int:observation_id>', methods = ['GET'])
 def get_observation(observation_id):
 	observation_from_db = Observation.query.filter_by(id = observation_id).first()
 	return jsonify(observation_from_db.serialize)
+
 
 # Returns the info and observations of a specific location.
 @app.route('/api/locations/<int:location_id>', methods = ['GET'])
@@ -123,25 +131,31 @@ def get_location(location_id):
 	location_from_db.load_observations(days=days)
 	return jsonify(location_from_db.serialize)
 
+
 # Returns the lowest and highest temperatures anywhere in the last 24 hours.
 # Only use for this is when the front end generates graphs, so it can set
 # the Y axis of them nicely and neatly
 @app.route('/api/extremes/', methods = ['GET'])
 def get_extremes():
-	time_filter = datetime.datetime.now() - datetime.timedelta(hours=24, minutes=0, seconds=0)
+	days = request.args.get('days', default = 1, type = int)
+	hours = days * 24
+	time_filter = datetime.datetime.now() - datetime.timedelta(hours=hours, minutes=0, seconds=0)
 	extremes = {
 		'max': Observation.query \
+			.filter(flags < MAX_FLAGS)
 			.filter(Observation.creation_time > time_filter) \
 			.order_by(Observation.temperature.desc()) \
 			.first() \
 			.serialize['temperature'],
 		'min': Observation.query \
+			.filter(flags < MAX_FLAGS)
 			.filter(Observation.creation_time > time_filter) \
 			.order_by(Observation.temperature.asc()) \
 			.first() \
 			.serialize['temperature']
 	}
 	return jsonify(extremes)
+
 
 # For flagging observations as suspicious/incorrect
 @app.route('/api/flag/<int:observation_id>', methods = ['POST'])
@@ -157,6 +171,7 @@ def flag_observation(observation_id):
 @app.route('/', methods = ['GET'])
 def index():
 	return send_from_directory('static/dist/', 'index.html')
+
 
 # Only used when using the dev server.
 if __name__ == '__main__':

@@ -33,15 +33,15 @@ function getTemperatureColorCode(t) {
 
 	const COLD = {
 		start: {
-			'h': 277,
+			'h': 177,
 			's': 100,
-			'l': 67,
+			'l': 100,
 			'a': 1
 		},
 		end: {
-			'h': 177,
+			'h': 190,
 			's': 100,
-			'l': 89,
+			'l': 61,
 			'a': 1
 		}
 	}
@@ -57,9 +57,9 @@ function getTemperatureColorCode(t) {
 	const SEPERATOR = 273; // ~7 degrees Celsius
 
 	if (t <= SEPERATOR) {
-		color.h = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.start.h, COLD.end.h);
-		color.s = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.start.s, COLD.end.s);
-		color.l = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.start.l, COLD.end.l);
+		color.h = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.end.h, COLD.start.h);
+		color.s = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.end.s, COLD.start.s);
+		color.l = map_range(t, MIN_TEMPERATURE, SEPERATOR, COLD.end.l, COLD.start.l);
 	} else if (t > SEPERATOR) {
 		color.h = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.start.h, WARM.end.h);
 		color.s = map_range(t, SEPERATOR, MAX_TEMPERATURE, WARM.start.s, WARM.end.s);

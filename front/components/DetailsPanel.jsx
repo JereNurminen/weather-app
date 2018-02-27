@@ -87,6 +87,7 @@ export default class ListPanel extends React.Component {
                             )}
                         </table>
                     </div>
+                    <span className="closePanel" onClick={() => this.props.openDetails(false)}>Close Panel</span>
                 </div>
             </div>
         )

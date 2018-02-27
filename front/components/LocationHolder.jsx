@@ -26,7 +26,7 @@ export default class CountryHolder extends React.Component {
     }
 
     getObservations() {
-        fetch('http://weather.jerenurminen.me/api/observations/')
+        fetch('http://weather.jerenurminen.me:5000/api/observations/')
         .then(response => response.json())
         .then(responseData => {
             this.setState({
