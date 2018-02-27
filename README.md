@@ -1,3 +1,5 @@
+![Screenshot of the web app.](https://i.imgur.com/iNRjQVF.png)
+
 The source code of a [web app](weather.jerenurminen.me) for recording weather observations. Made as a pre-assignment for Reaktor Summer 2018 recruitment (assignment [here](https://github.com/reaktor/kesa-2018) (in Finnish).)
 
 ## Technologies used
