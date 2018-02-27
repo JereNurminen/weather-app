@@ -107,6 +107,12 @@ def get_observations():
 		observations.append(location.serialize)
 	return jsonify(observations)
 
+# Returns specific observation
+@app.route('/api/observations/<int:observation_id>', methods = ['GET'])
+def get_observation(observation_id):
+	observation_from_db = Observation.query.filter_by(id = observation_id).first()
+	return jsonify(observation_from_db.serialize)
+
 # Returns the info and observations of a specific location.
 @app.route('/api/locations/<int:location_id>', methods = ['GET'])
 def get_location(location_id):
