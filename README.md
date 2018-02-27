@@ -6,7 +6,7 @@ For the back end I used Flask, as I've used it for a few projects and really lik
 It uses MySQL for saving the observations, using Flask-SQLAlchemy as an ORM. 
 
 ### Front End
-The front end is built using React. Mostly because I've been studying it recently and wanted to continue using it.
+The front end is built using React. Mostly because I've been studying it recently and wanted to continue using it, and also because it fits the needs of the project well.
 
 ### General
 The app uses WebSockets for real time updates (ie. when some else records an observation).
@@ -40,7 +40,7 @@ api_key = 'REDACTED'
 The directory `util/` contains a few useful utilities for development. `db_initializer.py` creates the database (`config.py` must be set up for this to work). `get_weather.py` is a script that runs continuously, getting the current weather hourly from [OpenWeatherMap](https://openweathermap.org/) and sending it to the server using its API. This way the app always has some recent-ish data to work with, and it will show up on the logs the same way as 'real' observations.
 
 ## Logging
-The app logs all sent observations in a file in its root in addition to the database.
+The app logs all sent observations in a file in its root directory in addition to the database.
 
 ## Notes
-* The app is currently build in a way that may make it hard to deploy elsewhere, as I've been developing it straight on the server. If you want to see how the 'finished' product functions and looks, just take a look at it [online](weather.jerenurminen.me).
+* The app is currently built in a way that may make it hard to deploy elsewhere, as I've been developing it straight on the server. If you want to see how the 'finished' product functions and looks, just take a look at it [online](weather.jerenurminen.me).
