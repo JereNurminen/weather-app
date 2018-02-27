@@ -24,7 +24,7 @@ function getTemperatureColorCode(t) {
 			'a': 1
 		},
 		end: {
-			'h': 19,
+			'h': 12,
 			's': 100,
 			'l': 50,
 			'a': 1
