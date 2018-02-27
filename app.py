@@ -137,6 +137,15 @@ def get_extremes():
 	}
 	return jsonify(extremes)
 
+# For flagging observations as suspicious/incorrect
+@app.route('/api/flag/<int:observation_id>', methods = ['POST'])
+def flag_observation(observation_id):
+	observation_from_db = Observation.query.filter_by(id = observation_id).first()
+	observation_from_db.flags = observation_from_db.flags + 1
+	db.session.commit()
+	return jsonify(observation_from_db.flags)
+
+
 # When the index is requested, we just serve it as a file as there is no need for 
 # rendering a template. All other static content is served by Apache from the static/ folder. 
 @app.route('/', methods = ['GET'])
