@@ -17,6 +17,7 @@ export default class ListPanel extends React.Component {
 
         this.loadObservations = this.loadObservations.bind(this);
         this.flagObservation = this.flagObservation.bind(this);
+        //this.updateObservation = this.updateObservation.bind(this);
 
         this.loadObservations();
     }
@@ -31,9 +32,25 @@ export default class ListPanel extends React.Component {
             });
         });
     }
-
+/*
+    updateObservation(id) {
+        fetch(`http://weather.jerenurminen.me:5000/api/observations/${id}`)
+        .then(response => response.json())
+        .then(responseData => {
+            this.setState({
+                observations: 
+            });
+        });
+    }
+*/
     flagObservation(id) {
-        console.log(id);
+        fetch(`http://weather.jerenurminen.me:5000/api/flag/${id}`, { 
+            method: 'POST',
+            mode: 'cors'
+        }).then(response => {
+            //this.updateObservation(id);
+            this.loadObservations();
+        });
     }
 
     render() {
@@ -56,7 +73,10 @@ export default class ListPanel extends React.Component {
                                         <td style={{borderColor: getTemperatureColorCode(observation.temperature)}}>{observation.id}</td>
                                         <td>{observation.creation_time}</td>
                                         <td>{kelvinToCelsius(observation.temperature)}</td>
-                                        <td onClick={() => {this.flagObservation(observation.id)}}><img className='flagIcon' src={flagIcon} alt="A flag icon"/></td>
+                                        <td onClick={() => {this.flagObservation(observation.id)}}>
+                                            {observation.flags ? (<span className="flags">{observation.flags} x </span>) : (null)}
+                                            <img className='flagIcon' src={flagIcon} alt="A flag icon"/>
+                                        </td>
                                     </tr>
                                 )}
                                 </tbody>
