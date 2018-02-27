@@ -67,6 +67,7 @@ class Location(db.Model):
 			'name': self.name,
 			'latitude': self.latitude,
 			'longitude': self.longitude,
+			'timezone': self.timezone,
 			'observations': self.observations
 		}
 
