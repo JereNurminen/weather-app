@@ -25,7 +25,7 @@ CORS(app)
 # Sets up SocketIO server
 socketio = SocketIO(app)
 # All observations with this amount (or more) of flags will be filtered out.
-MAX_FLAGS = 5
+MAX_FLAGS = 1
 
 
 ##############
