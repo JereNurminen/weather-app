@@ -43,6 +43,3 @@ The directory `util/` contains a few useful utilities for development. `db_initi
 
 ## Logging
 The app logs all sent observations in a file in its root directory in addition to the database.
-
-## Notes
-* The app is currently built in a way that may make it hard to deploy elsewhere, as I've been developing it straight on the server. If you want to see how the 'finished' product functions and looks, just take a look at it [online](weather.jerenurminen.me).
